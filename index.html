@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic settings -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <title>Google Clone</title>
+
+  <!-- Embedded CSS -->
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #202124;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 24px;
+      z-index: 100;
+    }
+
+    .header a {
+      color: #5f6368;
+      text-decoration: none;
+      margin: 0 8px;
+      font-size: 14px;
+    }
+
+    .header a:hover {
+      text-decoration: underline;
+    }
+
+    .center {
+      text-align: center;
+      margin-top: 15%;
+      transition: margin 0.3s;
+    }
+
+    .logo {
+      font-size: 60px;
+      font-weight: bold;
+      color: transparent;
+      background: linear-gradient(to right, #4285f4, #ea4335, #fbbc05, #34a853);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .search-box {
+      margin-top: 20px;
+      position: relative;
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .search-box img.icon,
+    .search-box i.icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
+    }
+
+    .search-icon { left: 16px; }
+    .mic-icon { right: 16px; }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 45px 12px 45px;
+      font-size: 18px;
+      border-radius: 24px;
+      border: 1px solid #ddd;
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      transition: box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 4px 10px rgba(66, 133, 244, 0.5);
+    }
+
+    #microphone{
+        cursor: pointer;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      border: 1px solid #f8f9fa;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #e8e8e8;
+    }
+
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border-radius: 0 0 10px 10px;
+      z-index: 10;
+      display: none;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .suggestions div {
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .suggestions div:hover {
+      background-color: #f1f1f1;
+    }
+
+    .sticky-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 99;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .tab {
+      font-weight: 500;
+      cursor: pointer;
+      padding: 6px 10px;
+      font-size: 14px;
+      color: #5f6368;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      color: #1a73e8;
+      border-bottom: 3px solid #1a73e8;
+    }
+
+    .results-container {
+      padding: 120px 10% 40px;
+      display: none;
+    }
+
+    .result-item {
+      margin-bottom: 24px;
+    }
+
+    .result-title {
+      color: #1a0dab;
+      font-size: 18px;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+
+    .result-url {
+      color: #006621;
+      font-size: 14px;
+    }
+
+    .result-description {
+      font-size: 14px;
+      color: #545454;
+    }
+
+    .image-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .image-box {
+      background: #f8f9fa;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .image-box img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .footer {
+      padding: 20px 0;
+      position: fixed;
+      bottom: 0;
+      right: 120px;
+    }
+
+    .footer a {
+      color: #5f6368;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 14px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top header links -->
+<div class="header">
+  <a href="https://about.google/" target="_blank">About</a>
+  <a href="https://store.google.com/" target="_blank">Store</a>
+</div>
+
+<!-- Sticky header shown after search -->
+<div class="sticky-header" id="stickyHeader">
+  <div class="search-box">
+    <img src="https://www.svgrepo.com/show/7109/search.svg" class="icon search-icon" alt="Search">
+    <input type="text" id="stickySearch" placeholder="Search..." autocomplete="off"/>
+    <i class="fa-solid fa-microphone icon mic-icon" id="microphone" onclick="microphone()"></i>
+    <div class="suggestions" id="stickySuggestions"></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('all')">All</div>
+    <div class="tab" onclick="switchTab('images')">Images</div>
+  </div>
+</div>
+
+<!-- Main section -->
+<div class="center" id="main">
+  <div class="logo">Google</div>
+  <div class="search-box">
+    <img src="https://www.svgrepo.com/show/7109/search.svg" class="icon search-icon" alt="Search">
+    <input type="text" id="searchInput" placeholder="Search..." autocomplete="off"/>
+   
+    <i class="fa-solid fa-microphone icon mic-icon" id="microphone" onclick="microphone()"></i>
+    <div class="suggestions" id="suggestions"></div>
+  </div>
+  <div class="buttons">
+    <button onclick="search()">Google Search</button>
+    <button onclick="feelingLucky()">I'm Feeling Lucky</button>
+  </div>
+</div>
+
+<!-- Results section -->
+<div class="results-container" id="results">
+  <div id="allResults"></div>
+  <div id="imageResults" style="display: none;"></div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <a href="https://policies.google.com/privacy" target="_blank">Privacy</a>
+  <a href="https://policies.google.com/terms" target="_blank">Terms</a>
+  <a href="chrome://settings/" target="_blank">Settings</a>
+</footer>
+
+<!-- JavaScript logic -->
+<script>
+  const topics = ["html", "css", "javascript", "react", "node", "python", "java", "sql", "bootstrap", "tailwind"];
+  const mockData = {};
+  topics.forEach(topic => {
+    mockData[topic] = {
+      all: Array(10).fill(0).map((_, i) => ({
+        title: `${topic.toUpperCase()} Result ${i + 1}`,
+        url: `https://example.com/${topic}/${i + 1}`,
+        desc: `Comprehensive guide on ${topic} - topic ${i + 1}.`
+      })),
+      images: Array(6).fill(0).map((_, i) =>
+        `https://source.unsplash.com/300x150/?${topic}&sig=${i + 1}`
+      )
+    };
+  });
+
+  const suggestionsBox = document.getElementById('suggestions');
+  const stickySuggestionsBox = document.getElementById('stickySuggestions');
+  const searchInput = document.getElementById('searchInput');
+  const stickySearch = document.getElementById('stickySearch');
+  const allResults = document.getElementById('allResults');
+  const imageResults = document.getElementById('imageResults');
+  const main = document.getElementById('main');
+  const results = document.getElementById('results');
+  const stickyHeader = document.getElementById('stickyHeader');
+
+//   microphone Function to simulate microphone input
+
+function microphone() {
+    
+  }
+
+  // sticky-input Function to hide all <a> links
+  function hideAnchors() {
+    document.querySelectorAll('a').forEach(link => {
+      link.style.display = 'none';
+    });
+  }
+
+  // sticky-input Search handler - includes hiding links
+  function search(term) {
+    const query = (term || searchInput.value.trim().toLowerCase());
+    if (!mockData[query]) {
+      alert("No results found.");
+      return;
+    }
+    hideAnchors(); // sticky-input Hide all anchor tags
+    stickySearch.value = query;
+    showResults(query);
+  }
+
+  // sticky-input "I'm Feeling Lucky" - includes hiding links
+  function feelingLucky() {
+    const keys = Object.keys(mockData);
+    const random = keys[Math.floor(Math.random() * keys.length)];
+    searchInput.value = random;
+    hideAnchors(); // sticky-input Hide all anchor tags
+    search(random);
+  }
+
+  function showResults(query) {
+    const data = mockData[query];
+    main.style.display = 'none';
+    stickyHeader.style.display = 'block';
+    results.style.display = 'block';
+
+    allResults.innerHTML = data.all.map(item =>
+      `<div class="result-item">
+        <div class="result-url">${item.url}</div>
+        <a class="result-title" href="${item.url}" target="_blank">${item.title}</a>
+        <div class="result-description">${item.desc}</div>
+      </div>`
+    ).join('');
+
+    imageResults.innerHTML =
+      `<div class="image-results">
+        ${data.images.map(src =>
+          `<div class="image-box"><img src="${src}" alt="Image"/></div>`
+        ).join('')}
+      </div>`;
+
+    switchTab('all');
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab')[tab === 'all' ? 0 : 1].classList.add('active');
+    allResults.style.display = tab === 'all' ? 'block' : 'none';
+    imageResults.style.display = tab === 'images' ? 'block' : 'none';
+  }
+
+  function showSuggestions(query, box) {
+    const matches = topics.filter(k => k.startsWith(query.toLowerCase()));
+    if (matches.length && query.length) {
+      box.innerHTML = matches.map(m =>
+        `<div onclick="selectSuggestion('${m}')">${m}</div>`
+      ).join('');
+      box.style.display = 'block';
+    } else {
+      box.style.display = 'none';
+    }
+  }
+
+  function selectSuggestion(term) {
+    searchInput.value = term;
+    stickySearch.value = term;
+    suggestionsBox.style.display = 'none';
+    stickySuggestionsBox.style.display = 'none';
+    search(term);
+  }
+
+  searchInput.addEventListener('input', () => showSuggestions(searchInput.value, suggestionsBox));
+  stickySearch.addEventListener('input', () => showSuggestions(stickySearch.value, stickySuggestionsBox));
+  searchInput.addEventListener('keydown', e => e.key === 'Enter' && search(searchInput.value));
+  stickySearch.addEventListener('keydown', e => e.key === 'Enter' && search(stickySearch.value));
+</script>
+
+</body>
+</html>
